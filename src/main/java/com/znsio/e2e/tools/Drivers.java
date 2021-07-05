@@ -129,13 +129,15 @@ public class Drivers {
         }
 
         if (numberOfAndroidDriversUsed == 0) {
-            AppiumDriver<WebElement> appiumDriver = (AppiumDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
-            Capabilities appiumDriverCapabilities = appiumDriver.getCapabilities();
+            AndroidDriver<WebElement> androidDriver = (AndroidDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
+
+//            AppiumDriver<WebElement> appiumDriver = (AppiumDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
+            Capabilities appiumDriverCapabilities = androidDriver.getCapabilities();
             LOGGER.info("CAPABILITIES: " + appiumDriverCapabilities);
             userPersonaDriverCapabilities.put(userPersona, appiumDriverCapabilities);
             currentDriver = new Driver(
                     context.getTestName() + "-" + userPersona,
-                    appiumDriver);
+                    androidDriver);
         } else {
             try {
                 AppiumDriver appiumDriver = allocateNewDeviceAndStartAppiumDriver();
