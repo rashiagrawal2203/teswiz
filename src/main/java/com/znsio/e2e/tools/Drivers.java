@@ -129,15 +129,13 @@ public class Drivers {
         }
 
         if (numberOfAndroidDriversUsed == 0) {
-            AndroidDriver<WebElement> androidDriver = (AndroidDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
-
-//            AppiumDriver<WebElement> appiumDriver = (AppiumDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
-            Capabilities appiumDriverCapabilities = androidDriver.getCapabilities();
+            AppiumDriver<WebElement> appiumDriver = (AppiumDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
+            Capabilities appiumDriverCapabilities = appiumDriver.getCapabilities();
             LOGGER.info("CAPABILITIES: " + appiumDriverCapabilities);
             userPersonaDriverCapabilities.put(userPersona, appiumDriverCapabilities);
             currentDriver = new Driver(
                     context.getTestName() + "-" + userPersona,
-                    androidDriver);
+                    appiumDriver);
         } else {
             try {
                 AppiumDriver appiumDriver = allocateNewDeviceAndStartAppiumDriver();
@@ -163,16 +161,11 @@ public class Drivers {
     }
 
     private AppiumDriver allocateNewDeviceAndStartAppiumDriver () {
-        AppiumDriver driver;
         try {
             DeviceAllocationManager deviceAllocationManager = DeviceAllocationManager.getInstance();
             AppiumDevice availableDevice = deviceAllocationManager.getNextAvailableDevice();
             deviceAllocationManager.allocateDevice(availableDevice);
-            if(Runner.platform.equals(Platform.android)) {
-                 driver = (AndroidDriver) new AppiumDriverManager().startAppiumDriverInstance();
-            }else{
-                 driver =  new AppiumDriverManager().startAppiumDriverInstance();
-            }
+            AppiumDriver driver = new AppiumDriverManager().startAppiumDriverInstance();
             updateAvailableDeviceInformation(availableDevice);
             return driver;
         } catch (Exception e) {
