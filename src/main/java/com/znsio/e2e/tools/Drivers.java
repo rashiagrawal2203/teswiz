@@ -14,6 +14,7 @@ import com.znsio.e2e.runner.Runner;
 import com.znsio.e2e.tools.cmd.CommandLineExecutor;
 import com.znsio.e2e.tools.cmd.CommandLineResponse;
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.appmanagement.ApplicationState;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
@@ -160,11 +161,16 @@ public class Drivers {
     }
 
     private AppiumDriver allocateNewDeviceAndStartAppiumDriver () {
+        AppiumDriver driver;
         try {
             DeviceAllocationManager deviceAllocationManager = DeviceAllocationManager.getInstance();
             AppiumDevice availableDevice = deviceAllocationManager.getNextAvailableDevice();
             deviceAllocationManager.allocateDevice(availableDevice);
-            AppiumDriver driver = new AppiumDriverManager().startAppiumDriverInstance();
+            if(Runner.platform.equals(Platform.android)) {
+                 driver = (AndroidDriver) new AppiumDriverManager().startAppiumDriverInstance();
+            }else{
+                 driver =  new AppiumDriverManager().startAppiumDriverInstance();
+            }
             updateAvailableDeviceInformation(availableDevice);
             return driver;
         } catch (Exception e) {
