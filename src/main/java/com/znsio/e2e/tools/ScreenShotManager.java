@@ -3,7 +3,10 @@ package com.znsio.e2e.tools;
 import com.context.SessionContext;
 import com.context.TestExecutionContext;
 import com.epam.reportportal.service.ReportPortal;
+import com.znsio.e2e.entities.Platform;
 import com.znsio.e2e.entities.TEST_CONTEXT;
+import com.znsio.e2e.runner.Runner;
+import io.appium.java_client.windows.WindowsDriver;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.OutputType;
@@ -31,8 +34,13 @@ public class ScreenShotManager {
 
     public void takeScreenShot (String fileName) {
         Driver driver = (Driver) context.getTestState(TEST_CONTEXT.CURRENT_DRIVER);
+        File screenshot;
         if (null != driver) {
-            File screenshot = ((TakesScreenshot) driver.getInnerDriver()).getScreenshotAs(OutputType.FILE);
+            if(Runner.platform.equals(Platform.windows)){
+                screenshot = ((WindowsDriver)driver.getInnerDriver()).getScreenshotAs(OutputType.FILE);
+            }else {
+                screenshot = ((TakesScreenshot) driver.getInnerDriver()).getScreenshotAs(OutputType.FILE);
+            }
             fileName = normaliseScenarioName(getPrefix() + "-" + fileName);
             File destinationFile = createScreenshotFile(directoryPath, fileName);
             LOGGER.info("The screenshot is placed in : " + destinationFile.getAbsolutePath());
@@ -47,6 +55,7 @@ public class ScreenShotManager {
             LOGGER.info("Driver is not instantiated for this test");
         }
     }
+
 
     private String normaliseScenarioName (String scenarioName) {
         return scenarioName.replaceAll("[`~ !@#$%^&*()\\-=+\\[\\]{}\\\\|;:'\",<.>/?]", "_");

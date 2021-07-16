@@ -15,6 +15,7 @@ import com.znsio.e2e.tools.cmd.CommandLineExecutor;
 import com.znsio.e2e.tools.cmd.CommandLineResponse;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.appmanagement.ApplicationState;
+import io.appium.java_client.windows.WindowsDriver;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import org.apache.log4j.Logger;
@@ -208,7 +209,7 @@ public class Drivers {
             );
         }
         if (numberOfWindowsDriversUsed < MAX_NUMBER_OF_APPIUM_DRIVERS) {
-            AppiumDriver<WebElement> windowsDriver = (AppiumDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
+            WindowsDriver<WebElement> windowsDriver = (WindowsDriver<WebElement>) context.getTestState(TEST_CONTEXT.APPIUM_DRIVER);
             currentDriver = new Driver(
                     context.getTestName() + "-" + userPersona,
                     windowsDriver);
